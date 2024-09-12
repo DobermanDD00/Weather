@@ -1,7 +1,6 @@
-package com.exercise.wether.service;
+package com.exercise.weather.service;
 
-import com.exercise.wether.models.Current;
-import com.exercise.wether.models.Weather;
+import com.exercise.weather.models.Weather.Weather;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

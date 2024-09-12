@@ -1,4 +1,4 @@
-package com.exercise.wether.models;
+package com.exercise.weather.models.Weather;
 
 import lombok.*;
 

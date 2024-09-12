@@ -1,16 +1,27 @@
-package com.exercise.wether.repositories;
+package com.exercise.weather.repositories;
 
-import lombok.SneakyThrows;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
+@Setter
 public class CityInFileRepository {
     public static void main(String[] args) {
-        CityInFileRepository cityInFileRepository  = new CityInFileRepository();
+        CityInFileRepository cityInFileRepository  = null;
+        try {
+            cityInFileRepository = new CityInFileRepository();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(cityInFileRepository.isMissingSymbol("Mosko", "Moskow"));
         System.out.println(cityInFileRepository.isMissingSymbol("Toky", "Tokyo"));
         System.out.println(cityInFileRepository.isExistCityWithErrorName("Mosko"));
@@ -20,21 +31,21 @@ public class CityInFileRepository {
 
     //    "city","city_ascii","lat","lng","country","iso2","iso3","admin_name","capital","population","id"
 
-    Path path;
-    List<String> strs;
-    String lineHeaders;
+    private Path path;
+    private List<String> strs;
+    private String lineHeaders;
 
 
-    public CityInFileRepository() {
+    public CityInFileRepository() throws IOException {
         this("src/main/resources/static/worldcities.csv");
     }
 
-    public CityInFileRepository(String path) {
+    public CityInFileRepository(String path) throws IOException {
         this(Paths.get(path));
     }
 
-    @SneakyThrows
-    CityInFileRepository(Path path) {
+
+    public CityInFileRepository(Path path) throws IOException {
         this.path = path;
         strs = Files.readAllLines(path);
         lineHeaders = strs.get(0);
@@ -111,7 +122,7 @@ public class CityInFileRepository {
 
     }
 
-    private List<Integer> indexesQuotationMarks(String str) {
+    public List<Integer> indexesQuotationMarks(String str) {
         List<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == '"') indexes.add(i);

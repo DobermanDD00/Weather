@@ -1,16 +1,18 @@
-package com.exercise.wether.controllers;
+package com.exercise.weather.controllers;
 
 
-import com.exercise.wether.models.Current;
-import com.exercise.wether.models.Weather;
-import com.exercise.wether.repositories.CityInFileRepository;
-import com.exercise.wether.service.WeatherClient;
+import com.exercise.weather.models.Weather.Weather;
+import com.exercise.weather.repositories.CityInFileRepository;
+import com.exercise.weather.service.Initialize;
+import com.exercise.weather.service.WeatherClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -35,24 +37,41 @@ public class TestController {
 
     @PostMapping ("/weather")
     public String showWeather(@RequestParam String city, Model model) {
-
-//        Weather weather = weatherClient.getWeatherNow();
-//        Weather weather = new Weather();
-
-        CityInFileRepository cityInFileRepository = new CityInFileRepository();
+//        log.trace("trace");
+//        log.debug("debug");
+//        log.info("info");
+//        log.warn("warn");
+//        log.error("error");
+        CityInFileRepository cityInFileRepository = null;
+        try {
+            cityInFileRepository = new CityInFileRepository();
+        } catch (IOException e) {
+            System.out.println();
+            log.warn("Error with {}", cityInFileRepository.getClass(),  e);
+        }
+//        try {
+//            throw new IOException();
+//        } catch (IOException e) {
+//            log.warn("Sldf{}","2354235", e);
+//        }
+//            log.warn("Sldf{}", new Throwable().getStackTrace());
         String cityCorrect = cityInFileRepository.isExistCityWithErrorName(city);
-//        System.out.println("Names:  "+city+"    "+cityCorrect);
         String reportCity = "The results for the request "+city+" are given";
-//        String reportCity = "";
         if (!city.equals(cityCorrect)) reportCity = "The entered city "+city+" is missing, the results for the city "+cityCorrect+" are given";
 
         RestTemplate restTemplate = new RestTemplate();
         Weather weather = restTemplate.getForObject("http://api.weatherapi.com/v1/current.json?key=32e079e0ae0e4e908e4195940240809&q=" + cityCorrect + "&aqi=no", Weather.class);
 
         model.addAttribute("reportCity", reportCity);
-//        model.addAttribute("title", reportCity);
         model.addAttribute(weather);
         return "weather";
 
+    }
+
+    @GetMapping("/initialize-city")
+    public String initializeCity(){
+        Long count = Initialize.initializeCity();
+        log.info("Initialize {} cites", count);
+        return "weather";
     }
 }
