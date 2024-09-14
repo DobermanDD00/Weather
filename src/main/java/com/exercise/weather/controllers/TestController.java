@@ -1,10 +1,13 @@
 package com.exercise.weather.controllers;
 
 
+import com.exercise.weather.models.City;
 import com.exercise.weather.models.Weather.Weather;
 import com.exercise.weather.repositories.CityInFileRepository;
+import com.exercise.weather.repositories.CityRepository;
+import com.exercise.weather.service.CityService;
 import com.exercise.weather.service.Initialize;
-import com.exercise.weather.service.WeatherClient;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,11 +20,19 @@ import java.io.IOException;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-
-
 public class TestController {
 
-    final WeatherClient weatherClient;
+//    final WeatherClient weatherClient;
+    private final CityService cityService;
+    @GetMapping("/initialize-city")
+    public String initializeCity(){
+       cityService.findById(1L);
+
+//        cityRepo.save(new City(1L,"saerul"));
+//        Long count = Initialize.initializeCity();
+//        log.info("Initialize {} cites", count);
+        return "weather";
+    }
 
 
 //    @GetMapping("/{id}")
@@ -68,10 +79,5 @@ public class TestController {
 
     }
 
-    @GetMapping("/initialize-city")
-    public String initializeCity(){
-        Long count = Initialize.initializeCity();
-        log.info("Initialize {} cites", count);
-        return "weather";
-    }
+
 }
